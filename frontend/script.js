@@ -1,4 +1,4 @@
-async function generateImage() {
+function generateImage() {
   const prompt = document.getElementById("prompt").value;
   const imageEl = document.getElementById("image");
   imageEl.src = "";
@@ -8,34 +8,24 @@ async function generateImage() {
     return;
   }
 
-  console.log("יוצר תמונה עבור:", prompt);
+  console.log("🎯 נשלחת בקשה עם טקסט:", prompt);
 
-  try {
-    const response = await fetch("https://ai-alpha-azure.vercel.app/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt })
+  fetch("https://ai-alpha-azure.vercel.app/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt })
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log("📸 קיבלנו נתונים:", data);
+      if (data.image) {
+        imageEl.src = data.image;
+      } else {
+        alert("❌ לא התקבלה תמונה");
+      }
+    })
+    .catch(error => {
+      alert("🚫 שגיאה בחיבור לשרת");
+      console.error("שגיאה:", error);
     });
-
-    const data = await response.json();
-
-    if (data.image) {
-      imageEl.src = data.image;
-    } else {
-      alert("❌ לא התקבלה תמונה. נסה שוב.");
-      console.error("שגיאה מהשרת:", data);
-    }
-  } catch (error) {
-    alert("🚫 שגיאה בעת שליחת הבקשה לשרת.");
-    console.error("שגיאה:", error);
-  }
 }
-console.log("📡 שולח בקשה לשרת עם prompt:", prompt);
-
-const response = await fetch("https://ai-alpha-azure.vercel.app/generate", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ prompt })
-});
-
-console.log("📨 התקבלה תשובה מהשרת:", response);
