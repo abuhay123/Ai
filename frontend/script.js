@@ -3,16 +3,30 @@ async function generateImage() {
   const imageEl = document.getElementById("image");
   imageEl.src = "";
 
-  const response = await fetch("https://ai-alpha-azure.vercel.app/generate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt })
-  });
+  if (!prompt.trim()) {
+    alert("אנא הזן תיאור לתמונה.");
+    return;
+  }
 
-  const data = await response.json();
-  if (data.image) {
-    imageEl.src = data.image;
-  } else {
-    alert("שגיאה ביצירת תמונה");
+  console.log("יוצר תמונה עבור:", prompt);
+
+  try {
+    const response = await fetch("https://ai-alpha-azure.vercel.app/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
+
+    const data = await response.json();
+
+    if (data.image) {
+      imageEl.src = data.image;
+    } else {
+      alert("❌ לא התקבלה תמונה. נסה שוב.");
+      console.error("שגיאה מהשרת:", data);
+    }
+  } catch (error) {
+    alert("🚫 שגיאה בעת שליחת הבקשה לשרת.");
+    console.error("שגיאה:", error);
   }
 }
