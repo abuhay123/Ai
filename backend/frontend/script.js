@@ -3,7 +3,7 @@ async function generateImage() {
   const imageEl = document.getElementById("image");
   imageEl.src = "";
 
-  const response = await fetch("https://your-backend.vercel.app/generate", {
+  const response = await fetch("https://ai-alpha-azure.vercel.app/generate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ prompt })
