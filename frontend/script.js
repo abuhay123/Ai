@@ -30,3 +30,12 @@ async function generateImage() {
     console.error("שגיאה:", error);
   }
 }
+console.log("📡 שולח בקשה לשרת עם prompt:", prompt);
+
+const response = await fetch("https://ai-alpha-azure.vercel.app/generate", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ prompt })
+});
+
+console.log("📨 התקבלה תשובה מהשרת:", response);
