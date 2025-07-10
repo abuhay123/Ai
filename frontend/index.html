@@ -32,20 +32,28 @@
 </head>
 <body>
   <h1>🎨 תמונה AI</h1>
-  <input id="prompt" placeholder="הקלד תיאור (באנגלית בלבד!)" />
+  <input id="prompt" placeholder="כתוב תיאור בעברית או באנגלית" />
   <button onclick="generate()">צור תמונה</button>
   <div id="result"></div>
 
   <script>
+    async function translate(text) {
+      const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=he|en`);
+      const data = await res.json();
+      return data.responseData.translatedText;
+    }
+
     async function generate() {
-      const prompt = document.getElementById('prompt').value;
+      const input = document.getElementById('prompt').value;
       const result = document.getElementById('result');
-      result.innerHTML = 'ממתין לתמונה...';
+      result.innerHTML = '⏳ מתרגם ומחפש תמונה...';
+
       try {
-        const res = await fetch(`https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`);
-        result.innerHTML = `<img src="${res.url}" alt="Generated Image" />`;
+        const translated = await translate(input);
+        const imageRes = await fetch(`https://image.pollinations.ai/prompt/${encodeURIComponent(translated)}`);
+        result.innerHTML = `<img src="${imageRes.url}" alt="Generated Image" />`;
       } catch (err) {
-        result.innerHTML = '❌ שגיאה: לא ניתן ליצור תמונה.';
+        result.innerHTML = '❌ שגיאה ביצירת תמונה.';
       }
     }
   </script>
