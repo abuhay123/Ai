@@ -2,38 +2,111 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8">
-  <title>תמונה AI 🎨</title>
+  <title>🎨 תמונה AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       direction: rtl;
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
       background: #0c0c1d;
       color: white;
-      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 30px 20px 10px;
       text-align: center;
-      padding: 50px;
     }
-    input, button {
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: none;
+
+    header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
     }
-    button {
-      background-color: green;
-      color: white;
-      cursor: pointer;
-    }
-    img {
-      margin-top: 30px;
-      max-width: 90%;
+
+    .input-section {
+      width: 90%;
+      max-width: 500px;
+      background-color: #1a1a2e;
       border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    select {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      border: none;
+      background: #f0f0f0;
+      color: #000;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px;
+      background-color: #3366ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #254eda;
+    }
+
+    #result {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    img {
+      max-width: 95%;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
     }
   </style>
 </head>
 <body>
-  <h1>🎨 תמונה AI</h1>
-  <input id="prompt" placeholder="כתוב תיאור בעברית או באנגלית" />
-  <button onclick="generate()">צור תמונה</button>
+  <header>
+    <h1>🎨 תמונה AI</h1>
+  </header>
+
+  <div class="input-section">
+    <input id="prompt" type="text" placeholder="כתוב תיאור לתמונה (בעברית או אנגלית)">
+    <div class="controls">
+      <select id="style" disabled>
+        <option selected>ללא סגנון (בקרוב)</option>
+      </select>
+      <button onclick="generate()">צור תמונה</button>
+    </div>
+  </div>
+
   <div id="result"></div>
 
   <script>
