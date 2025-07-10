@@ -3,18 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <title>תמונה AI 🎨</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      direction: rtl;
+      background: #0c0c1d;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      background-color: green;
+      color: white;
+      cursor: pointer;
+    }
+    img {
+      margin-top: 30px;
+      max-width: 90%;
+      border-radius: 12px;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>תמונה AI 🎨</h1>
-    <input type="text" id="prompt" placeholder="הכנס תיאור לתמונה...">
-    <button onclick="generateImage()">צור תמונה</button>
-    <div id="loading" style="display:none;">יוצר תמונה...</div>
-    <div id="result">
-      <img id="image" src="" alt="">
-    </div>
-  </div>
-  <script src="script.js"></script>
+  <h1>🎨 תמונה AI</h1>
+  <input id="prompt" placeholder="הקלד תיאור (באנגלית בלבד!)" />
+  <button onclick="generate()">צור תמונה</button>
+  <div id="result"></div>
+
+  <script>
+    async function generate() {
+      const prompt = document.getElementById('prompt').value;
+      const result = document.getElementById('result');
+      result.innerHTML = 'ממתין לתמונה...';
+      try {
+        const res = await fetch(`https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`);
+        result.innerHTML = `<img src="${res.url}" alt="Generated Image" />`;
+      } catch (err) {
+        result.innerHTML = '❌ שגיאה: לא ניתן ליצור תמונה.';
+      }
+    }
+  </script>
 </body>
 </html>
