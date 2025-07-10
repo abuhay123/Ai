@@ -1,34 +1,30 @@
-function generateImage() {
+async function generateImage() {
   const prompt = document.getElementById("prompt").value;
-  const imageEl = document.getElementById("image");
-  imageEl.src = "";
+  const image = document.getElementById("image");
+  const loading = document.getElementById("loading");
 
-  if (!prompt.trim()) {
-    alert("אנא הזן תיאור.");
-    return;
-  }
+  if (!prompt) return alert("נא להזין תיאור!");
 
-  console.log("שולח בקשה עם:", prompt);
+  image.src = "";
+  loading.style.display = "block";
 
-  fetch("https://ai-alpha-azure.vercel.app/generate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt })
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error("שגיאה מהשרת: " + res.status);
-      return res.json();
-    })
-    .then((data) => {
-      console.log("תשובה:", data);
-      if (data.image) {
-        imageEl.src = data.image;
-      } else {
-        alert("לא התקבלה תמונה.");
-      }
-    })
-    .catch((err) => {
-      alert("❌ שגיאה בחיבור לשרת:\n" + err.message);
-      console.error("שגיאה:", err);
+  try {
+    const response = await fetch("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ inputs: prompt })
     });
+
+    if (!response.ok) throw new Error("שגיאה ביצירת תמונה");
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    image.src = url;
+  } catch (err) {
+    alert("אירעה שגיאה: " + err.message);
+  } finally {
+    loading.style.display = "none";
+  }
 }
