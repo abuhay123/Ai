@@ -2,7 +2,7 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8">
-  <title>🎨 תמונה AI</title>
+  <title>תמונה/וידאו AI 🎨</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -12,102 +12,94 @@
       font-family: 'Arial', sans-serif;
       background: #0c0c1d;
       color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-    }
-
-    header {
-      padding: 30px 20px 10px;
       text-align: center;
+      padding: 40px 20px;
     }
 
-    header h1 {
+    h1 {
       font-size: 28px;
-      margin-bottom: 10px;
+      margin-bottom: 30px;
     }
 
-    .input-section {
-      width: 90%;
-      max-width: 500px;
-      background-color: #1a1a2e;
-      border-radius: 12px;
+    .box {
+      background: #1a1a2e;
       padding: 20px;
+      border-radius: 12px;
+      max-width: 500px;
+      margin: auto;
       box-shadow: 0 0 15px rgba(0,0,0,0.4);
     }
 
-    input[type="text"] {
+    input {
       width: 100%;
       padding: 12px;
+      font-size: 16px;
       border-radius: 8px;
       border: none;
-      font-size: 16px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
     }
 
-    .controls {
+    .buttons {
       display: flex;
       gap: 10px;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    select {
-      flex: 1;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 14px;
-      border: none;
-      background: #f0f0f0;
-      color: #000;
+      justify-content: center;
+      margin-bottom: 20px;
     }
 
     button {
       flex: 1;
       padding: 10px;
-      background-color: #3366ff;
+      background-color: #2563eb;
       color: white;
+      font-size: 16px;
       border: none;
       border-radius: 8px;
-      font-size: 16px;
       cursor: pointer;
       transition: background-color 0.3s;
     }
 
     button:hover {
-      background-color: #254eda;
+      background-color: #1e40af;
     }
 
     #result {
       margin-top: 30px;
-      text-align: center;
     }
 
-    img {
-      max-width: 95%;
+    img, video {
+      max-width: 100%;
       border-radius: 12px;
       box-shadow: 0 0 20px rgba(255,255,255,0.1);
+      margin-bottom: 10px;
+    }
+
+    .download-btn {
+      display: inline-block;
+      margin-top: 5px;
+      padding: 8px 16px;
+      background: #10b981;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🎨 תמונה AI</h1>
-  </header>
 
-  <div class="input-section">
-    <input id="prompt" type="text" placeholder="כתוב תיאור לתמונה (בעברית או אנגלית)">
-    <div class="controls">
-      <select id="style" disabled>
-        <option selected>ללא סגנון (בקרוב)</option>
-      </select>
-      <button onclick="generate()">צור תמונה</button>
+  <h1>🎨 צור תמונה או וידאו מטקסט</h1>
+
+  <div class="box">
+    <input type="text" id="prompt" placeholder="כתוב תיאור בעברית או באנגלית...">
+    
+    <div class="buttons">
+      <button onclick="generateImage()">צור תמונה</button>
+      <button onclick="generateVideo()">צור וידאו</button>
     </div>
-  </div>
 
-  <div id="result"></div>
+    <div id="result">⌛ המתן לקבלת תוצאה...</div>
+  </div>
 
   <script>
     async function translate(text) {
@@ -116,19 +108,49 @@
       return data.responseData.translatedText;
     }
 
-    async function generate() {
-      const input = document.getElementById('prompt').value;
-      const result = document.getElementById('result');
-      result.innerHTML = '⏳ מתרגם ומחפש תמונה...';
+    async function generateImage() {
+      const prompt = document.getElementById("prompt").value;
+      const result = document.getElementById("result");
+      result.innerHTML = "🎨 יוצר תמונה...";
 
       try {
-        const translated = await translate(input);
+        const translated = await translate(prompt);
         const imageRes = await fetch(`https://image.pollinations.ai/prompt/${encodeURIComponent(translated)}`);
-        result.innerHTML = `<img src="${imageRes.url}" alt="Generated Image" />`;
+        const imageUrl = imageRes.url;
+
+        result.innerHTML = `
+          <img src="${imageUrl}" alt="תמונה AI">
+          <br>
+          <a href="${imageUrl}" download="generated-image.jpg" class="download-btn">⬇️ הורד תמונה</a>
+        `;
       } catch (err) {
-        result.innerHTML = '❌ שגיאה ביצירת תמונה.';
+        result.innerHTML = "❌ שגיאה ביצירת תמונה.";
+      }
+    }
+
+    async function generateVideo() {
+      const prompt = document.getElementById("prompt").value;
+      const result = document.getElementById("result");
+      result.innerHTML = "🎥 יוצר וידאו...";
+
+      try {
+        const translated = await translate(prompt);
+        // כאן תוכל לשלב API אמיתי בעתיד, עכשיו וידאו דמה
+        const videoUrl = "https://www.w3schools.com/html/mov_bbb.mp4";
+
+        result.innerHTML = `
+          <video controls autoplay>
+            <source src="${videoUrl}" type="video/mp4">
+            הדפדפן לא תומך בוידאו
+          </video>
+          <br>
+          <a href="${videoUrl}" download="generated-video.mp4" class="download-btn">⬇️ הורד וידאו</a>
+        `;
+      } catch (err) {
+        result.innerHTML = "❌ שגיאה ביצירת וידאו.";
       }
     }
   </script>
+
 </body>
 </html>
